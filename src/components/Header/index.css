@@ -1,0 +1,22 @@
+.header{
+    display: flex;
+    flex-direction: column;
+    margin-left: 200px;
+    margin: 0 auto;
+    height: auto;
+    background-color: #7159c1;
+    padding: 24px;
+}
+.header-essencial{
+    margin-left: 200px;
+}
+.title-header{
+    color: #ffffffff;
+    line-height: 60px;
+    letter-spacing: 4px;
+}
+.description-header{
+    color: #ffffffff;
+    font-size: 16px;
+    font-weight: 500;
+}

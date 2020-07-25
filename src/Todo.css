@@ -1,0 +1,76 @@
+   :root {
+    --primary-color: #7159C1;
+    --title-color: #3A38AF;
+    --text-color: #6C6C80;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  a{
+      text-decoration: none;
+  }
+  body {
+    background: #FFFF;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text-color);
+  }
+ 
+  body, input, button {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5 , h6 {
+    color: var(--title-color);
+    font-family: Ubuntu;
+  }
+
+  .readOnly{
+      padding: 25px;
+      width: 50%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .search{
+      position: relative;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.15);
+      width: auto;
+      margin-right: 20px;
+  }
+  .search:hover{
+      background-color: rgba(255, 255, 255, 0.25);
+  }
+  .search-icon{
+      width: 56px;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+  }
+  .cb{
+      font-size: 20px;
+      margin-right: 50px;
+  }
+  .add-button{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .input-input{
+      width: 100%;
+      padding: 8px 8px 8px 56px;
+      transition: width 300ms cubic-bezier(0.4,0,0.2,1) 0ms;
+  }
+  .input-root{
+      color: inherit;
+  }
