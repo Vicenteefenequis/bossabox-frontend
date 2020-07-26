@@ -1,22 +1,24 @@
-.header{
-    display: flex;
-    flex-direction: column;
-    margin-left: 200px;
-    margin: 0 auto;
-    height: auto;
-    background-color: #7159c1;
-    padding: 24px;
+.header {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0 auto;
+  height: auto;
+  background-color: #7159c1;
+  padding: 24px;
 }
-.header-essencial{
-    margin-left: 200px;
+.header-essencial {
+  min-width: 80%;
+  margin: 0 auto;
 }
-.title-header{
-    color: #ffffffff;
-    line-height: 60px;
-    letter-spacing: 4px;
+
+.title-header {
+  color: #ffffffff;
+  line-height: 60px;
+  letter-spacing: 4px;
 }
-.description-header{
-    color: #ffffffff;
-    font-size: 16px;
-    font-weight: 500;
+.description-header {
+  color: #ffffffff;
+  font-size: 16px;
+  font-weight: 500;
 }
