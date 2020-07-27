@@ -65,29 +65,6 @@ const Todo: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   }
 
-  // const handleSubmit: any = useCallback(
-  //   async () => {
-  //     try {
-  //       // transformar tags
-  //       const arrayTags:any= tags.split(",").map((e) => e.replace(/\s/g, ""));
-  //       const {
-  //         description,
-  //         link,
-  //         tags:arrayTags,
-  //         title
-  //       } = formData
-  //       await api.post("/tools", sendData);
-  //       alert("Adicionado com sucesso");
-  //       setShowModal(false);
-  //     } catch (err) {
-  //       if (err instanceof Yup.ValidationError) {
-  //         alert(err);
-  //       }
-  //     }
-  //   },
-  //   []
-  // );
-
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
@@ -109,6 +86,7 @@ const Todo: React.FC = () => {
       tags: arrayTags,
     };
 
+    await schema.validate(data);
     await api.post("/tools", data);
     alert("Tools Created");
     setShowModal(false);
