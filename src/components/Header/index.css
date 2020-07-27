@@ -2,13 +2,12 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin: 0 auto;
   height: auto;
   background-color: #7159c1;
   padding: 24px;
 }
 .header-essencial {
-  min-width: 80%;
+  width: 80%;
   margin: 0 auto;
 }
 

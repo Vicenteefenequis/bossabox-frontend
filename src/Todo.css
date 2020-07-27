@@ -51,3 +51,44 @@ h6 {
   justify-content: center;
   align-items: center;
 }
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.card-root {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.modal {
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid grey;
+  margin: 0 auto;
+  margin-top: 10px;
+  background: grey;
+}
+
+.form {
+  width: 50%;
+  height: 50vh;
+  display: flex;
+  align-self: center;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.btn {
+  margin-top: 70px;
+}
