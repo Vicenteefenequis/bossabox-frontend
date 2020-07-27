@@ -7,7 +7,7 @@ import Todo from "./Todo";
 export default function Routes() {
   return (
     <BrowserRouter>
-      <Route path="/" exact component={Todo} />
+      <Route path="/dashboard" exact component={Todo} />
     </BrowserRouter>
   );
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useHistory } from "react-router-dom";
 import {
   InputAdornment,
   InputLabel,
@@ -11,7 +12,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
-import { Search, Add, Home } from "@material-ui/icons";
+import * as Yup from "yup";
+import { FiTrash } from "react-icons/fi";
+import { Search, Add } from "@material-ui/icons";
 import "./Todo.css";
 import api from "./services/api";
 import Header from "./components/Header/index";
@@ -22,44 +25,94 @@ interface Item {
   title: string;
   link: string;
   description: string;
+  tags: string[];
+}
+interface FormData {
+  title: string;
+  link: string;
+  description: string;
   tags: string;
 }
 
 const Todo: React.FC = () => {
+  const history = useHistory();
   const [items, setItems] = useState<Item[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     link: "",
     description: "",
-    tags: [],
+    tags: "",
   });
 
   useEffect(() => {
     api.get("/tools").then((response) => {
-      console.log(response.data);
       setItems(response.data);
     });
-  }, []);
+  }, [items]);
+
+  async function handleDeleteItem(id: Number) {
+    try {
+      await api.delete(`tools/${id}`);
+    } catch (error) {
+      alert("Erro ao deletear item , tente novamente ");
+    }
+  }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
     setFormData({ ...formData, [name]: value });
   }
+
+  // const handleSubmit: any = useCallback(
+  //   async () => {
+  //     try {
+  //       // transformar tags
+  //       const arrayTags:any= tags.split(",").map((e) => e.replace(/\s/g, ""));
+  //       const {
+  //         description,
+  //         link,
+  //         tags:arrayTags,
+  //         title
+  //       } = formData
+  //       await api.post("/tools", sendData);
+  //       alert("Adicionado com sucesso");
+  //       setShowModal(false);
+  //     } catch (err) {
+  //       if (err instanceof Yup.ValidationError) {
+  //         alert(err);
+  //       }
+  //     }
+  //   },
+  //   []
+  // );
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
+    const schema = Yup.object().shape({
+      title: Yup.string().required("Titulo obrigatorio"),
+      description: Yup.string().required("Descrição obrigatoria"),
+      link: Yup.string().required("Link obrigatorio"),
+      tags: Yup.string().required("Tag obrigatoria"),
+    });
+
     const { description, link, title, tags } = formData;
 
-    const { data } = await api.post("/tools", {
+    const arrayTags = tags.split(",").map((e) => e.replace(/\s/g, ""));
+    console.log(arrayTags);
+    const data = {
       title,
       link,
       description,
-      tags: tags.join(", "),
-    });
+      tags: arrayTags,
+    };
+
+    await api.post("/tools", data);
     alert("Tools Created");
-    window.location.reload(true);
+    setShowModal(false);
+    history.push("/dashboard");
   }
   return (
     <div>
@@ -110,9 +163,14 @@ const Todo: React.FC = () => {
                 {item.description}
               </Typography>
               <Typography className="card-pos" color="textSecondary">
-                {item.tags} ,
+                {item.tags.map((tag) => (
+                  <span> #{tag}</span>
+                ))}
               </Typography>
             </CardContent>
+            <Button onClick={() => handleDeleteItem(item.id)}>
+              <FiTrash />
+            </Button>
           </Card>
         ))}
         <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)}>
@@ -144,7 +202,7 @@ const Todo: React.FC = () => {
               />
               <TextField
                 id="standard-textarea"
-                name="tag"
+                name="tags"
                 label="Tags"
                 placeholder="Enter you tags"
                 multiline
