@@ -56,13 +56,18 @@ h6 {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
+  max-width: 700px;
 }
 .card-root {
   margin-bottom: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
+}
+.tag {
+  font-size: 0.75rem;
 }
 
 form {
@@ -80,6 +85,9 @@ form {
   margin-top: 10px;
   background: grey;
 }
+.description {
+  font-size: 1rem;
+}
 
 .form {
   width: 50%;
@@ -91,4 +99,9 @@ form {
 }
 .btn {
   margin-top: 70px;
+}
+@media screen and (max-width: 375px) {
+  .card {
+    width: 100%;
+  }
 }

@@ -111,7 +111,7 @@ const Todo: React.FC = () => {
             />
           </FormControl>
           <Checkbox />
-          Search is tags only
+          <p className="tag">Search is tags only</p>
         </div>
         <div className="add-button">
           <Button
@@ -120,7 +120,7 @@ const Todo: React.FC = () => {
             }}
           >
             <Add />
-            Add
+            <h4>Add</h4>
           </Button>
         </div>
       </div>
@@ -133,13 +133,11 @@ const Todo: React.FC = () => {
                 color="textSecondary"
                 gutterBottom
               >
-                <a target="_blank" href={item.link}>
+                <a target="_blank" rel="noopener noreferrer" href={item.link}>
                   {item.title}
                 </a>
               </Typography>
-              <Typography variant="h5" component="h2">
-                {item.description}
-              </Typography>
+              <h2 className="description">{item.description}</h2>
               <Typography className="card-pos" color="textSecondary">
                 {item.tags.map((tag) => (
                   <span> #{tag}</span>
