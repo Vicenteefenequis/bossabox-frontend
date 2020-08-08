@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useHistory } from "react-router-dom";
 import {
   InputAdornment,
   InputLabel,
@@ -15,9 +14,9 @@ import {
 import * as Yup from "yup";
 import { FiTrash } from "react-icons/fi";
 import { Search, Add } from "@material-ui/icons";
-import "./Todo.css";
-import api from "./services/api";
-import Header from "./components/Header/index";
+import "./styles.css";
+import api from "../../services/api";
+import Header from "../../components/Header/index";
 import Modal from "react-modal";
 
 interface Item {
@@ -34,9 +33,10 @@ interface FormData {
   tags: string;
 }
 
-const Todo: React.FC = () => {
-  const history = useHistory();
+const Dashboard: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
+  const [search, setSearch] = useState("");
+  const [searchTag, setSearchTag] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -46,28 +46,52 @@ const Todo: React.FC = () => {
   });
 
   useEffect(() => {
-    api.get("/tools").then((response) => {
-      setItems(response.data);
-    });
-  }, [items]);
+    if (searchTag) {
+      api.get(`/tools?tags_like=${search}`).then((response) => {
+        setItems(response.data);
+      });
+    } else {
+      api.get(`/tools?q=${search}`).then((response) => {
+        setItems(response.data);
+      });
+    }
+  }, [searchTag, search]);
+
+  async function loadTools() {
+    const response = await api.get("tools");
+    const { data } = response;
+    setItems(data);
+  }
+
+  useEffect(() => {
+    loadTools();
+  }, []);
 
   async function handleDeleteItem(id: Number) {
     try {
       await api.delete(`tools/${id}`);
+      loadTools();
     } catch (error) {
-      alert("Erro ao deletear item , tente novamente ");
+      console.log(error);
     }
   }
+
+  const handleSearch = (value: string) => {
+    setTimeout(() => {
+      setSearch(value);
+    }, 1000);
+  };
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
     setFormData({ ...formData, [name]: value });
   }
+  const handleSwitchSearch = () => {
+    setSearchTag(!searchTag);
+  };
 
   async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-
     const schema = Yup.object().shape({
       title: Yup.string().required("Titulo obrigatorio"),
       description: Yup.string().required("Descrição obrigatoria"),
@@ -89,8 +113,9 @@ const Todo: React.FC = () => {
     await schema.validate(data);
     await api.post("/tools", data);
     alert("Tools Created");
+    setItems([]);
     setShowModal(false);
-    history.push("/dashboard");
+    loadTools();
   }
   return (
     <div>
@@ -102,6 +127,7 @@ const Todo: React.FC = () => {
               Oque Procura?
             </InputLabel>
             <Input
+              onChange={(e) => handleSearch(e.target.value)}
               id="input-with-icon-adornment"
               startAdornment={
                 <InputAdornment position="start">
@@ -110,7 +136,7 @@ const Todo: React.FC = () => {
               }
             />
           </FormControl>
-          <Checkbox />
+          <Checkbox checked={searchTag} onChange={handleSwitchSearch} />
           <p className="tag">Search is tags only</p>
         </div>
         <div className="add-button">
@@ -198,4 +224,4 @@ const Todo: React.FC = () => {
   );
 };
 
-export default Todo;
+export default Dashboard;

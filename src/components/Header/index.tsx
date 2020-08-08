@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./styles.css";
 import Logo from "../../assets/logo.png";
 
 interface IProps {
