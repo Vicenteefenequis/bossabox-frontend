@@ -11,8 +11,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { FiTrash } from "react-icons/fi";
+import { FiTrash, FiPlus, FiX } from "react-icons/fi";
 import { Search, Add } from "@material-ui/icons";
 import "./styles.css";
 import api from "../../services/api";
@@ -38,6 +39,7 @@ const Dashboard: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchTag, setSearchTag] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [modalRemove, setModalRemove] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     title: "",
     link: "",
@@ -57,38 +59,14 @@ const Dashboard: React.FC = () => {
     }
   }, [searchTag, search]);
 
-  async function loadTools() {
-    const response = await api.get("tools");
-    const { data } = response;
-    setItems(data);
-  }
-
   useEffect(() => {
     loadTools();
   }, []);
-
-  async function handleDeleteItem(id: Number) {
-    try {
-      await api.delete(`tools/${id}`);
-      loadTools();
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleSearch = (value: string) => {
     setTimeout(() => {
       setSearch(value);
     }, 1000);
-  };
-
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-
-    setFormData({ ...formData, [name]: value });
-  }
-  const handleSwitchSearch = () => {
-    setSearchTag(!searchTag);
   };
 
   async function handleSubmit(event: FormEvent) {
@@ -112,20 +90,42 @@ const Dashboard: React.FC = () => {
 
     await schema.validate(data);
     await api.post("/tools", data);
-    alert("Tools Created");
+    toast.success("Tools Created", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     setItems([]);
     setShowModal(false);
     loadTools();
+  }
+  async function handleDeleteItem(id: Number) {
+    try {
+      await api.delete(`tools/${id}`);
+      setModalRemove(false);
+      loadTools();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+
+    setFormData({ ...formData, [name]: value });
+  }
+  const handleSwitchSearch = () => {
+    setSearchTag(!searchTag);
+  };
+  async function loadTools() {
+    const response = await api.get("tools");
+    const { data } = response;
+    setItems(data);
   }
   return (
     <div>
       <Header title="VUTTR" description="Very Useful Tools to Remember" />
       <div className="fieldSearch">
         <div className="search">
-          <FormControl className="classes.margin">
-            <InputLabel htmlFor="input-with-icon-adornment">
-              Oque Procura?
-            </InputLabel>
+          <FormControl>
+            <InputLabel defaultValue={search}>Search</InputLabel>
             <Input
               onChange={(e) => handleSearch(e.target.value)}
               id="input-with-icon-adornment"
@@ -170,18 +170,65 @@ const Dashboard: React.FC = () => {
                 ))}
               </Typography>
             </CardContent>
-            <Button onClick={() => handleDeleteItem(item.id)}>
+            <Button
+              onClick={() => {
+                setModalRemove(!modalRemove);
+              }}
+            >
               <FiTrash />
             </Button>
+            <Modal
+              closeTimeoutMS={10}
+              isOpen={modalRemove}
+              className="modalremoved ReactModal__Overlay"
+              onRequestClose={() => {
+                setModalRemove(false);
+              }}
+            >
+              <div className="bodymodalremoved">
+                <div className="titleremoved">
+                  <h1>Remove Tool</h1>
+                  <FiX />
+                </div>
+                <p>Are you want to remote tool?</p>
+                <div className="buttonsgroup">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setModalRemove(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    Yes,Remove
+                  </Button>
+                </div>
+              </div>
+            </Modal>
           </Card>
         ))}
-        <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)}>
+
+        <Modal
+          className="modal"
+          isOpen={showModal}
+          onRequestClose={() => setShowModal(false)}
+        >
           <form onSubmit={handleSubmit}>
+            <div className="headerform">
+              <h1>Add New Tool</h1>
+              <FiPlus size={24} />
+            </div>
             <div className="form">
               <TextField
                 id="multipline"
                 label="Tool Name"
                 name="title"
+                className="field"
+                variant="outlined"
                 placeholder="Enter the name of the tool"
                 multiline
                 onChange={handleInputChange}
@@ -189,6 +236,8 @@ const Dashboard: React.FC = () => {
               <TextField
                 id="standard-textarea"
                 label="Tool Link"
+                className="field"
+                variant="outlined"
                 placeholder="Enter tool link"
                 name="link"
                 multiline
@@ -198,6 +247,8 @@ const Dashboard: React.FC = () => {
                 id="standard-textarea"
                 label="Tool Description"
                 name="description"
+                className="field"
+                variant="outlined"
                 placeholder="Describe the tool in a nutshell"
                 multiline
                 onChange={handleInputChange}
@@ -206,6 +257,8 @@ const Dashboard: React.FC = () => {
                 id="standard-textarea"
                 name="tags"
                 label="Tags"
+                className="field"
+                variant="outlined"
                 placeholder="Enter you tags"
                 multiline
                 onChange={handleInputChange}

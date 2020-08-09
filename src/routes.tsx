@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 export default function Routes() {
   return (
     <BrowserRouter>
-      <Route path="/dashboard" exact component={Dashboard} />
+      <Route path="/" exact component={Dashboard} />
     </BrowserRouter>
   );
 }
