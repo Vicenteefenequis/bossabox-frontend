@@ -46,6 +46,7 @@ h6 {
   align-items: center;
   flex-wrap: nowrap;
 }
+
 .add-button {
   display: flex;
   justify-content: center;

@@ -1,12 +1,9 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import {
-  InputAdornment,
-  InputLabel,
-  Input,
   FormControl,
-  Checkbox,
   Button,
   Card,
+  Switch,
   CardContent,
   Typography,
   TextField,
@@ -14,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { FiTrash, FiPlus, FiX } from "react-icons/fi";
-import { Search, Add } from "@material-ui/icons";
+import { Add } from "@material-ui/icons";
 import "./styles.css";
 import api from "../../services/api";
 import Header from "../../components/Header/index";
@@ -115,8 +112,9 @@ const Dashboard: React.FC = () => {
     setSearchTag(!searchTag);
   };
   async function loadTools() {
-    const response = await api.get("tools");
+    const response = await api.get("/tools");
     const { data } = response;
+    console.log(data);
     setItems(data);
   }
   return (
@@ -125,18 +123,9 @@ const Dashboard: React.FC = () => {
       <div className="fieldSearch">
         <div className="search">
           <FormControl>
-            <InputLabel defaultValue={search}>Search</InputLabel>
-            <Input
-              onChange={(e) => handleSearch(e.target.value)}
-              id="input-with-icon-adornment"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              }
-            />
+            <TextField   onChange={(e) => handleSearch(e.target.value)} id="outlined-basic" label="Search" variant="outlined" />
           </FormControl>
-          <Checkbox checked={searchTag} onChange={handleSwitchSearch} />
+          <Switch color="primary" checked={searchTag} onChange={handleSwitchSearch} />
           <p className="tag">Search is tags only</p>
         </div>
         <div className="add-button">
@@ -231,6 +220,7 @@ const Dashboard: React.FC = () => {
                 variant="outlined"
                 placeholder="Enter the name of the tool"
                 multiline
+                required
                 onChange={handleInputChange}
               />
               <TextField
@@ -240,6 +230,7 @@ const Dashboard: React.FC = () => {
                 variant="outlined"
                 placeholder="Enter tool link"
                 name="link"
+                required
                 multiline
                 onChange={handleInputChange}
               />
@@ -251,6 +242,7 @@ const Dashboard: React.FC = () => {
                 variant="outlined"
                 placeholder="Describe the tool in a nutshell"
                 multiline
+                required
                 onChange={handleInputChange}
               />
               <TextField
@@ -261,6 +253,7 @@ const Dashboard: React.FC = () => {
                 variant="outlined"
                 placeholder="Enter you tags"
                 multiline
+                required
                 onChange={handleInputChange}
               />
             </div>
