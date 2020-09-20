@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {shade} from 'polished'
 import { Tooltip } from '@material-ui/core';
 
 
@@ -23,6 +24,23 @@ export const Card = styled.div`
         justify-content:space-between;
         align-items:center;
     }
+    button{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background: #F95E5A 0% 0% no-repeat padding-box;
+        border-radius: 5px;
+        opacity: 1;
+        border:0;
+        padding:6px;
+        color:white;
+        transition: background 500ms;
+    }
+    button:hover{
+        background: ${shade(0.2,"#F95E5A")};
+    }
+    
+  
 `;
 
 export const InputSearch = styled.input`
@@ -64,8 +82,10 @@ export const GroupSearch = styled.div`
         margin-left:24px;
     }
     strong{
-         color:"#FFF";
+        color:white;
+        font-size:12px;
     }
+  
 `;
 
 export const TypographyBody = styled.p`

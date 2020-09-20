@@ -165,12 +165,16 @@ const Dashboard: React.FC = () => {
 
                 {items.map((it,index) => (
                     <motion.li key={index} className="item" variants={item}>
-                      <Card >
+                      <Card>
                         <div>
-                          <h1>{it.title}</h1>
+                          <a href={it.link}>
+                            <h1>{it.title}</h1>
+                          </a>
                           <div className="btnGroup">
-                            <DeleteForever/>
-                            <p>Remover</p>
+                            <button onClick={()=>{handleDeleteItem(it.id)}}>
+                              <DeleteForever/>
+                              <p>Remover</p>
+                            </button>
                           </div>
                         </div>
                         <h4>{it.description}</h4>
