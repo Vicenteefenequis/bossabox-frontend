@@ -5,15 +5,24 @@ import { Tooltip } from '@material-ui/core';
 export const Card = styled.div`
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 20px 25px #0000001A;
+    margin-top: 12px;
     border-radius: 5px;
     opacity: 1;
     padding:12px;
     transition: transform 0.2s;
-
+    max-width:600px;
+  
+    h1{
+        color:"#0000";
+    }
     &:hover{
         transform: translateX(10px);
     }
-
+    div{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
 `;
 
 export const InputSearch = styled.input`
@@ -41,16 +50,8 @@ export const ContainerItemsFromMenu = styled.div`
   max-width:500px;
   margin: 0 auto;
   margin-top:12px;
-`;
-export const Content = styled.div`
-    display:flex;
-
-    place-content: center;
-    align-items:center;
-
-    width:100%;
-    max-width:700px;
-
+  
+ 
 `;
 
 
@@ -61,6 +62,9 @@ export const GroupSearch = styled.div`
     align-items:center;
     & > button{
         margin-left:24px;
+    }
+    strong{
+         color:"#FFF";
     }
 `;
 
@@ -82,12 +86,7 @@ export const ContainerCard = styled.div`
   max-width: 700px;
 `;
 
-export const TypographyDescription = styled.h4`
-    font: normal normal 600 30px/36px Source Sans Pro;
-    letter-spacing: 0.6px;
-    color: #170C3A;
-    opacity: 1;
-`;
+
 
 export const Input = styled.input `
     min-width: 300px;
@@ -107,9 +106,9 @@ export const Error = styled(Tooltip)`
 `;
 
 export const ModalController = styled.div`
-    display:flex;
-    height:100%;
-    justify-content:center;
-    flex-direction:column;
-    width:70%;
+   display:flex;
+   flex-direction:column;
+   max-width:600px;
+   margin: 0 auto;
 `;
+

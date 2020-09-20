@@ -1,9 +1,9 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent,useCallback, useRef } from "react";
+import React, { useState, useEffect,useCallback, useRef } from "react";
 import {
   Switch,
 } from "@material-ui/core";
 import * as Yup from "yup";
-import { Add } from "@material-ui/icons";
+import { Add,DeleteForever } from "@material-ui/icons";
 import api from "../../services/api";
 import Header from "../../components/Header/index";
 import { 
@@ -11,8 +11,6 @@ import {
   InputSearch , 
   ContainerItemsFromMenu, 
   GroupSearch ,
-  TypographyBody,
-  TypographyDescription,
   ContainerCard,
   ModalController
 } from './styles'
@@ -22,7 +20,9 @@ import Modal from "react-modal";
 import getValidationErrors from "../../utils/getValidationError";
 import { FormHandles } from "@unform/core";
 import {Form} from "@unform/web";
-import { displayPartsToString } from "typescript";
+import {motion} from 'framer-motion';
+
+
 interface Item {
   id: number;
   title: string;
@@ -30,25 +30,34 @@ interface Item {
   description: string;
   tags: string[];
 }
-interface FormData {
-  title: string;
-  link: string;
-  description: string;
-  tags: string;
-}
+
 
 const Dashboard: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [search, setSearch] = useState("");
   const [searchTag, setSearchTag] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalRemove, setModalRemove] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    title: "",
-    link: "",
-    description: "",
-    tags: "",
-  });
+
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
+  };
+  const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 0.5,
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   const formRef = useRef<FormHandles>(null);
 
   useEffect(() => {
@@ -73,9 +82,8 @@ const Dashboard: React.FC = () => {
     }, 1000);
   };
 
-  const handleSubmt = useCallback(async(data:Item) => {
+  const handleSubmit = useCallback(async(data:Item) => {
     try{
-      console.log("CHEGUEI")
       formRef.current?.setErrors({});
       const schema = Yup.object().shape({
         title: Yup.string().required("Titulo obrigatorio"),
@@ -94,43 +102,7 @@ const Dashboard: React.FC = () => {
       console.log(erros);
       formRef.current?.setErrors(erros);
     }
-
-
   }, [items]);
-
-  /*async function handleSubmit(event: FormEvent) {
-    try{
-      const schema = Yup.object().shape({
-        title: Yup.string().required("Titulo obrigatorio"),
-        description: Yup.string().required("Descrição obrigatoria"),
-        link: Yup.string().required("Link obrigatorio"),
-        tags: Yup.string().required("Tag obrigatoria"),
-      });
-  
-      const { description, link, title, tags } = formData;
-  
-      const arrayTags = tags.split(",").map((e) => e.replace(/\s/g, ""));
-      console.log(arrayTags);
-      const data = {
-        title,
-        link,
-        description,
-        tags: arrayTags,
-      };
-  
-      const validate = await schema.validate(data,
-        {abortEarly:false}
-      );
-
-      await api.post("/tools", data);
-     
-     
-      loadTools();
-    } catch(err){
-      setError(true);
-    }
-   
-  }*/
   async function handleDeleteItem(id: Number) {
     try {
       await api.delete(`tools/${id}`);
@@ -139,11 +111,7 @@ const Dashboard: React.FC = () => {
       console.log(error);
     }
   }
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
 
-    setFormData({ ...formData, [name]: value });
-  }
   const handleSwitchSearch = () => {
     setSearchTag(!searchTag);
   };
@@ -162,7 +130,7 @@ const Dashboard: React.FC = () => {
 
             <div style={{display:'flex'}}>
               <Switch color="primary" checked={searchTag} onChange={handleSwitchSearch} />
-              <p>Search is tag only</p>
+              <strong>Search is tag only</strong>
             </div>
 
             <Button color={"blue"}
@@ -174,11 +142,10 @@ const Dashboard: React.FC = () => {
             <h4>Add</h4>
           </Button>
         </GroupSearch>
-         
         </ContainerItemsFromMenu>
       <ContainerCard>
           <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} ariaHideApp={false}>
-            <Form ref={formRef} onSubmit={handleSubmt}>
+            <Form ref={formRef} onSubmit={handleSubmit}>
               <h1 style={{color:"#170C3A"}}>Add new tool</h1>
               <Input name="title" placeholder="Enter your title" />
               <Input name="link" placeholder="Enter your link"/>
@@ -188,6 +155,33 @@ const Dashboard: React.FC = () => {
           </Form>
         </Modal>
       </ContainerCard>
+      <ModalController>
+        <motion.ul
+            className="container"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+        >
+
+                {items.map((it,index) => (
+                    <motion.li key={index} className="item" variants={item}>
+                      <Card >
+                        <div>
+                          <h1>{it.title}</h1>
+                          <div className="btnGroup">
+                            <DeleteForever/>
+                            <p>Remover</p>
+                          </div>
+                        </div>
+                        <h4>{it.description}</h4>
+                        <span>{it.tags}</span>
+                      </Card>
+                    </motion.li>
+                ))}
+
+        </motion.ul>
+      </ModalController>
+
     </>
   );
 };

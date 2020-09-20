@@ -6,6 +6,7 @@ export default createGlobalStyle`
     padding:0;
     box-sizing:border-box;
     outline:0;
+    list-style:none;
   }
   code{
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -13,7 +14,6 @@ export default createGlobalStyle`
   }
   body {
     background: #312E38;
-    color: #FFF;
     -webkit-font-smoothing:antialiased;
     margin: 0;
      font-family: 'Roboto';
