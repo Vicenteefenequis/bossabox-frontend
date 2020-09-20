@@ -95,6 +95,7 @@ const Dashboard: React.FC = () => {
         {abortEarly:false}
       );
       await api.post("/tools", data);
+      loadTools();
       setShowModal(false);
 
     }catch(err){
